@@ -1,0 +1,80 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  metadata:
+    name: Extract metadata
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract crate information
+        id: metadata
+        run: |
+          cargo metadata --no-deps --format-version 1 | jq -r '"name=" + .packages[0].name' | tee -a $GITHUB_OUTPUT
+    outputs:
+      name: ${{ steps.metadata.outputs.name }}
+
+  build:
+    name: ${{ matrix.job.target }} (${{ matrix.job.os }})
+    runs-on: ${{ matrix.job.os }}
+    needs: metadata
+    strategy:
+      matrix:
+        job:
+          - { target: aarch64-unknown-linux-musl, os: ubuntu-20.04, use-cross: true }
+          - { target: aarch64-unknown-linux-gnu,  os: ubuntu-20.04, use-cross: true }
+          - { target: x86_64-unknown-linux-gnu,   os: ubuntu-20.04, use-cross: true }
+          - { target: x86_64-unknown-linux-musl,  os: ubuntu-20.04, use-cross: true }
+          - { target: aarch64-apple-darwin,       os: macos-14                      }
+          - { target: x86_64-apple-darwin,        os: macos-13                      }
+
+    env:
+      BUILD_CMD: cargo
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install prerequisites
+        shell: bash
+        run: |
+          case ${{ matrix.job.target }} in
+            aarch64-unknown-linux-gnu) sudo apt-get -y update ; sudo apt-get -y install gcc-aarch64-linux-gnu ;;
+          esac
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.job.target }}
+
+      - name: Install cross
+        if: matrix.job.use-cross
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cross
+
+      - name: Overwrite build command env variable
+        if: matrix.job.use-cross
+        shell: bash
+        run: echo "BUILD_CMD=cross" >> $GITHUB_ENV
+
+      - name: Build
+        shell: bash
+        run: $BUILD_CMD build --locked --release --target=${{ matrix.job.target }}
+
+      - name: Archive artifacts
+        shell: bash
+        run: |
+          ARTIFACT="${{ needs.metadata.outputs.name }}-${{ github.ref_name }}-${{ matrix.job.target }}"
+          tar -C "target/${{ matrix.job.target }}/release" -czf ${ARTIFACT}.tar.gz ${{ needs.metadata.outputs.name }}
+          echo "ASSET=${ARTIFACT}.tar.gz" >> $GITHUB_ENV
+
+      - name: Create release and Upload assets
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ github.ref_name }}
+          draft: true
+          files: |
+            ${{ env.ASSET }}

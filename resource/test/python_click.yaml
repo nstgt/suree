@@ -1,0 +1,17 @@
+command_output: |
+  Usage: click-sample.py [OPTIONS] COMMAND [ARGS]...
+  
+    Example tool with Click
+  
+  Options:
+    --help  Show this message and exit.
+  
+  Commands:
+    sub1  First subcommand
+    sub2  Second subcommand
+
+parse_result:
+  - command: "sub1"
+    description: "First subcommand"
+  - command: "sub2"
+    description: "Second subcommand"
