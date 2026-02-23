@@ -10,7 +10,7 @@ pub struct Args {
         default_value = "--help",
         allow_hyphen_values = true
     )]
-    pub help_string: Option<String>,
+    pub help_string: String,
 
     #[clap(required = true)]
     pub commands: Vec<String>,

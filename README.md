@@ -37,7 +37,7 @@ helm
 
 ## Install
 
-Download an pre-built binary from [Releases](https://github.com/nstgt/suree/releases) and put it in your `$PATH`.
+Download a pre-built binary from [Releases](https://github.com/nstgt/suree/releases) and put it in your `$PATH`.
 
 Alternatively you can `git clone https://github.com/nstgt/suree` and run `cargo build --release` in the directory.
 

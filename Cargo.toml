@@ -3,6 +3,7 @@ name = "suree"
 version = "0.0.1"
 edition = "2021"
 description = "suree - list subcommands in a tree-like format"
+license = "MIT"
 
 [dependencies]
 async-recursion = "1.1.1"

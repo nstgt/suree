@@ -19,10 +19,7 @@ pub struct Options {
 impl From<cli::Args> for Options {
     fn from(args: cli::Args) -> Self {
         Options {
-            help_string: match args.help_string {
-                Some(s) => s,
-                None => "--help".to_string(),
-            },
+            help_string: args.help_string,
             commands: args.commands,
         }
     }
@@ -103,7 +100,7 @@ async fn grow_subcommand_tree(
             let arena = Arc::clone(&arena);
 
             async move {
-                let mut command_path = command_path.clone();
+                let mut command_path = command_path;
                 command_path.push(cmd.clone());
 
                 let node = {
