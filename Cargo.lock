@@ -564,7 +564,6 @@ dependencies = [
 name = "suree"
 version = "0.0.1"
 dependencies = [
- "anyhow",
  "async-recursion",
  "clap",
  "futures",
@@ -574,7 +573,6 @@ dependencies = [
  "serde",
  "serde_yml",
  "tokio",
- "tokio-macros",
 ]
 
 [[package]]

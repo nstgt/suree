@@ -9,5 +9,8 @@ mod suree;
 async fn main() {
     let args = cli::Args::parse();
     let options: suree::Options = args.into();
-    suree::run(options).await;
+    if let Err(e) = suree::run(options).await {
+        eprintln!("Error: {e}");
+        std::process::exit(1);
+    }
 }

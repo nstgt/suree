@@ -12,6 +12,6 @@ pub struct Args {
     )]
     pub help_string: Option<String>,
 
-    #[clap()]
+    #[clap(required = true)]
     pub commands: Vec<String>,
 }

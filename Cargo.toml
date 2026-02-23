@@ -5,14 +5,14 @@ edition = "2021"
 description = "suree - list subcommands in a tree-like format"
 
 [dependencies]
-anyhow = "1.0.102"
 async-recursion = "1.1.1"
 clap = { version = "4.5.60", features = ["derive"] }
 futures = "0.3.32"
 indextree = "4.7.4"
 itertools = "0.14.0"
 regex = "1.12.3"
+tokio = { version = "1.49.0", features = ["full"] }
+
+[dev-dependencies]
 serde = { version = "1.0.228", features = ["derive"] }
 serde_yml = "0.0.12"
-tokio = { version = "1.49.0", features = ["full"] }
-tokio-macros = "2.6.0"
