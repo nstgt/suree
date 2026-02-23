@@ -81,7 +81,7 @@ mod tests {
     fn load_test_case_yaml_file(file_path: String) -> (String, Vec<(String, String)>) {
         let yaml_content = fs::read_to_string(file_path);
 
-        let test_case: TestCase = serde_yaml::from_str(&yaml_content.unwrap()).unwrap();
+        let test_case: TestCase = serde_yml::from_str(&yaml_content.unwrap()).unwrap();
         let expected = test_case
             .parse_result
             .into_iter()
